@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuroAdapt - Learning Dashboard</title>
+    <meta name="description" content="NeuroAdapt adaptive learning dashboard with real-time posture and emotion detection.">
+    <link rel="stylesheet" href="/static/css/learning.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body data-emotion="none">
+
+    <!-- Navbar -->
+    <header>
+        <nav class="navbar">
+            <div class="navbar-left">
+                <a href="/" class="navbar-logo">NeuroAdapt</a>
+            </div>
+            <ul class="navbar-nav">
+                <li><a href="/" class="nav-link">Home</a></li>
+                <li><a href="#" class="nav-link active">Dashboard</a></li>
+            </ul>
+            <div class="navbar-right">
+                <span class="welcome-text">Posture-Aware Learning</span>
+                <div class="emotion-btn-wrap" id="emotion-btn-wrap">
+                    <button class="btn-emotion" id="emotion-toggle-btn"
+                            aria-haspopup="true" aria-expanded="false"
+                            aria-controls="emotion-dropdown">
+                        <span class="emotion-btn-icon" id="emotion-btn-icon">&#127917;</span>
+                        <span class="emotion-btn-label" id="emotion-btn-label">Emotion</span>
+                        <span class="emotion-btn-arrow">&#9662;</span>
+                    </button>
+                    <div class="emotion-dropdown" id="emotion-dropdown" role="menu" aria-label="Emotion selector" hidden>
+                        <div class="emotion-dropdown-header">
+                            <span class="dropdown-title">Set Emotion</span>
+                            <span class="dropdown-subtitle">Manual UI theme override</span>
+                        </div>
+                        <div class="emotion-option-list">
+                            <button class="emotion-option" data-emotion="engaged" role="menuitem">
+                                <span class="option-icon">&#127919;</span>
+                                <div class="option-text">
+                                    <span class="option-name">Engaged</span>
+                                    <span class="option-desc">Focused, attentive study</span>
+                                </div>
+                                <span class="option-check">&#10003;</span>
+                            </button>
+                            <button class="emotion-option" data-emotion="bored" role="menuitem">
+                                <span class="option-icon">&#128529;</span>
+                                <div class="option-text">
+                                    <span class="option-name">Bored</span>
+                                    <span class="option-desc">Low interest, needs stimulus</span>
+                                </div>
+                                <span class="option-check">&#10003;</span>
+                            </button>
+                            <button class="emotion-option" data-emotion="confused" role="menuitem">
+                                <span class="option-icon">&#129300;</span>
+                                <div class="option-text">
+                                    <span class="option-name">Confused</span>
+                                    <span class="option-desc">Needs clearer context</span>
+                                </div>
+                                <span class="option-check">&#10003;</span>
+                            </button>
+                            <button class="emotion-option" data-emotion="frustrated" role="menuitem">
+                                <span class="option-icon">&#128548;</span>
+                                <div class="option-text">
+                                    <span class="option-name">Frustrated</span>
+                                    <span class="option-desc">Stressed, needs calm</span>
+                                </div>
+                                <span class="option-check">&#10003;</span>
+                            </button>
+                        </div>
+                        <div class="emotion-dropdown-footer">
+                            <button class="btn-reset-emotion" id="btn-reset-emotion">&#x21BA; Use Auto Detection</button>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn-focus" id="btn-focus-mode" type="button" aria-pressed="false" title="Toggle dark Focus Mode with emotion ambient lighting">Focus Mode</button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main content -->
+    <main class="dashboard-page">
+        <div class="dashboard-container">
+
+            <!-- LEFT: Video + Lesson -->
+            <section class="video-section">
+
+
+                <!-- YouTube Video URL Input Bar -->
+                <div class="video-url-bar">
+                    <div class="video-url-input-wrap">
+                        <span class="url-icon">&#128279;</span>
+                        <input type="text" id="youtube-url-input" class="youtube-url-input"
+                               placeholder="Paste YouTube Video URL (e.g. https://www.youtube.com/watch?v=...)"
+                               value="https://www.youtube.com/watch?v=HcqpanDadyQ"
+                               aria-label="YouTube Video URL">
+                        <button class="btn-load-video" id="btn-load-video" type="button">Load Video</button>
+                    </div>
+                </div>
+
+                <!-- Video player — full width, clean -->
+                <div class="ml-video-card">
+                    <div class="ml-video-wrapper">
+                        <iframe
+                            id="youtube-iframe"
+                            src="https://www.youtube.com/embed/HcqpanDadyQ?rel=0&showinfo=0&enablejsapi=1"
+                            title="Lesson Video Player"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                    <!-- hidden canvas for frame capture -->
+                    <canvas id="capture-canvas" style="display:none;"></canvas>
+                </div>
+
+                <!-- Posture/Adaptation alert banner -->
+
+                <!-- Adaptive feedback and posture guidance banner -->
+                <div id="adaptation-banner" class="adaptation-banner" style="display:none;">
+                    <div class="adaptation-msg-block">
+                        <span class="adaptation-icon" id="adaptation-icon">&#127919;</span>
+                        <div class="adaptation-texts">
+                            <p class="adaptation-message" id="adaptation-message">Ready to learn.</p>
+                            <p class="adaptation-tip" id="adaptation-tip">Sit comfortably upright for best focus.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Posture alert banner -->
+                <div id="posture-alert" style="display:none;"></div>
+            </section>
+
+            <!-- RIGHT: Compact Combined Detection Monitor -->
+            <aside class="monitor-panel" id="emotion-panel">
+
+                <div class="monitor-card emotion-monitor">
+
+                    <!-- Header -->
+                    <div class="monitor-card-header">
+                        <h3 class="monitor-title">DETECTION MONITOR</h3>
+                        <span class="mode-indicator" id="mode-indicator">AUTO</span>
+                    </div>
+
+                    <!-- Webcam feed (compact, live stream) -->
+                    <div class="webcam-section" id="webcam-section">
+                        <div class="webcam-feed-frame">
+                            <div class="camera-placeholder-main" id="camera-placeholder">
+                                <span class="cam-icon">&#128247;</span>
+                                <span class="cam-hint">Camera inactive</span>
+                            </div>
+                            <video id="webcam-video" autoplay playsinline muted style="display:none;"></video>
+                            <span class="live-badge" id="camera-badge" style="display:none;">&#9679; LIVE</span>
+                        </div>
+
+                        <!-- Combined Emotion & Posture Status Row -->
+                        <div class="detection-label-row">
+                            <span class="detection-state-label" id="current-state">&#8212;</span>
+                            <span class="detection-raw-label" id="raw-posture-label"></span>
+                        </div>
+                    </div>
+
+                    <!-- Divider -->
+                    <div class="monitor-divider"></div>
+
+                    <!-- Status & Metrics -->
+                    <div id="camera-status" class="camera-status-line" style="display:none;"></div>
+
+                    <div class="confidence-row">
+                        <span class="confidence-label">Confidence</span>
+                        <span class="confidence-value" id="confidence-value">&#8212;</span>
+                    </div>
+
+                    <div class="posture-tracking-card" id="posture-tracking-card">
+                        <div class="posture-tracking-header">
+                            <span class="posture-tracking-label">Posture State</span>
+                            <span class="posture-badge" id="posture-badge">UPRIGHT</span>
+                        </div>
+                        <div class="posture-name-value" id="posture-name-display">
+                            <span class="posture-icon" id="posture-icon">&#129485;</span>
+                            <span class="posture-text" id="posture-text">Upright</span>
+                        </div>
+                    </div>
+
+                    <!-- Controls -->
+                    <div class="camera-controls">
+                        <button class="btn-start-processing" id="start-auto" type="button">START AUTO DETECTION</button>
+                        <button class="btn-stop-processing" id="stop-auto" type="button" style="display:none;">STOP DETECTION</button>
+                    </div>
+
+                </div>
+
+            </aside>
+        </div>
+    </main>
+
+    <script type="module" src="/static/js/learning.js"></script>
+</body>
+</html>

@@ -1,0 +1,1281 @@
+/*
+  NeuroAdapt - Learning Dashboard Styles
+  Dark navy EdTech theme â€” 70/30 two-column layout
+  Updated: Emotion-adaptive backgrounds, compact webcam widget, emotion picker
+*/
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   CSS Variables
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+
+:root {
+    /* Colors */
+    --bg-page:        #0f172a;
+    --bg-card:        #1a2235;
+    --bg-card-alt:    #202b42;
+    --bg-input:       #253048;
+    --border:         rgba(255,255,255,0.10);
+    --border-accent:  rgba(34,197,94,0.40);
+
+    --green:          #22c55e;
+    --green-dark:     #16a34a;
+    --green-glow:     rgba(34,197,94,0.18);
+
+    --text-primary:   #f0f6fc;
+    --text-secondary: #8b949e;
+    --text-muted:     #484f58;
+
+    --accent-blue:    #58a6ff;
+    --accent-amber:   #f59e0b;
+    --accent-red:     #ef4444;
+    --accent-indigo:  #818cf8;
+
+    /* Spacing */
+    --radius-card:    14px;
+    --radius-sm:      8px;
+    --gap:            1.25rem;
+
+    /* Navbar */
+    --navbar-h:       60px;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════════ 
+   Reset
+   ══════════════════════════════════════════════════════════════════════════════════ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-page);
+    color: var(--text-primary);
+    line-height: 1.6;
+    min-height: 100vh;
+    /* Only background-color transitions in CSS; background-image cannot be animated */
+    transition: background-color 0.9s ease;
+    position: relative;
+}
+
+/* ══════════════════════════════════════════════════
+   Dynamic Emotion-Adaptive Page Backgrounds
+   STRONG, VIBRANT & INSTANTLY NOTICEABLE FULL-PAGE THEMES
+   body[data-emotion="..."] drives background-color.
+   ::before adds a layered radial-glow overlay.
+   ══════════════════════════════════════════════════ */
+
+/* Shared glow layer — transition both opacity and background */
+body[data-emotion]::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                background 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 1;
+}
+
+/* Smooth base color transition */
+body {
+    transition: background-color 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Default / No emotion — deep navy, no glow */
+body[data-emotion="none"] {
+    background-color: var(--bg-page);
+}
+body[data-emotion="none"]::before { opacity: 0; }
+
+/* ── ENGAGED: Deep vivid emerald ── */
+body[data-emotion="engaged"] {
+    background-color: #064e3b;
+}
+body[data-emotion="engaged"]::before {
+    background:
+        radial-gradient(ellipse 110% 80% at 10% 15%,  rgba(16, 255, 140, 0.55)  0%, transparent 65%),
+        radial-gradient(ellipse 90%  70% at 90% 85%,  rgba(5,  212, 115, 0.45)  0%, transparent 65%),
+        radial-gradient(ellipse 60%  55% at 50% 50%,  rgba(52, 211, 153, 0.20)  0%, transparent 70%),
+        linear-gradient(160deg, rgba(6, 95, 70, 0.98), rgba(4, 60, 45, 1.00));
+}
+
+/* ── BORED: Warm steel-blue ── */
+body[data-emotion="bored"] {
+    background-color: #1e3a5f;
+}
+body[data-emotion="bored"]::before {
+    background:
+        radial-gradient(ellipse 110% 80% at 20% 80%,  rgba(96, 165, 250, 0.50)  0%, transparent 65%),
+        radial-gradient(ellipse 90%  70% at 85% 15%,  rgba(59, 130, 246, 0.40)  0%, transparent 65%),
+        radial-gradient(ellipse 60%  50% at 50% 50%,  rgba(147,197,253, 0.15)   0%, transparent 70%),
+        linear-gradient(160deg, rgba(30, 58, 95, 0.98), rgba(15, 35, 65, 1.00));
+}
+
+/* ── CONFUSED: Electric violet-indigo — needs help ── */
+body[data-emotion="confused"] {
+    background-color: #2e1065;
+}
+body[data-emotion="confused"]::before {
+    background:
+        radial-gradient(ellipse 110% 80% at 25% 25%,  rgba(196, 100, 255, 0.60)  0%, transparent 60%),
+        radial-gradient(ellipse 90%  70% at 80% 80%,  rgba(139, 92,  246, 0.50)  0%, transparent 65%),
+        radial-gradient(ellipse 60%  55% at 55% 45%,  rgba(167,139,250, 0.25)    0%, transparent 70%),
+        linear-gradient(160deg, rgba(46, 16, 101, 0.98), rgba(30, 10, 75, 1.00));
+}
+
+/* ── FRUSTRATED: Deep crimson-red ── */
+body[data-emotion="frustrated"] {
+    background-color: #7f1d1d;
+}
+body[data-emotion="frustrated"]::before {
+    background:
+        radial-gradient(ellipse 110% 80% at 50% 10%,  rgba(255, 80, 80, 0.65)   0%, transparent 60%),
+        radial-gradient(ellipse 90%  70% at 15% 88%,  rgba(239, 50, 50, 0.50)   0%, transparent 65%),
+        radial-gradient(ellipse 60%  50% at 85% 50%,  rgba(252,165,165, 0.22)   0%, transparent 70%),
+        linear-gradient(160deg, rgba(127, 29, 29, 0.98), rgba(90, 15, 15, 1.00));
+}
+
+/* ══════════════════════════════════════════════════
+   FOCUS MODE: Pitch Black + subtle ambient glow only
+   background-color !important wins over all emotion themes.
+   ══════════════════════════════════════════════════ */
+body.focus-mode {
+    background-color: #000000 !important;
+}
+
+/* Kill all emotion base colors in focus mode — black wins */
+body.focus-mode[data-emotion]::before {
+    opacity: 0;
+}
+
+/* Only show a very subtle glow edge in focus mode */
+
+
+body.focus-mode[data-emotion="confused"]::before {
+    opacity: 1;
+    background:
+        radial-gradient(ellipse 50% 35% at 50% 0%,   rgba(196, 100, 255, 0.25) 0%, transparent 70%),
+        radial-gradient(circle 200px at 5% 95%,        rgba(139, 92, 246, 0.18) 0%, transparent 60%);
+}
+
+body.focus-mode[data-emotion="frustrated"]::before {
+    opacity: 1;
+    background:
+        radial-gradient(ellipse 50% 35% at 50% 0%,   rgba(255, 80, 80, 0.28)  0%, transparent 70%),
+        radial-gradient(circle 200px at 5% 95%,        rgba(239, 50, 50, 0.20) 0%, transparent 60%);
+}
+
+
+
+
+
+
+body.focus-mode[data-emotion="none"]::before { opacity: 0; }
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   Navbar
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+
+.navbar {
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    height: var(--navbar-h);
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+}
+
+.navbar-left { flex-shrink: 0; }
+
+.navbar-logo {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    text-decoration: none;
+    letter-spacing: -0.02em;
+}
+
+.navbar-logo span { color: var(--green); }
+
+.navbar-nav {
+    display: flex;
+    gap: 0.25rem;
+    list-style: none;
+}
+
+.nav-link {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    padding: 0.35rem 0.85rem;
+    border-radius: 6px;
+    transition: color 0.2s, background 0.2s;
+}
+
+.nav-link:hover { color: var(--text-primary); background: var(--bg-input); }
+
+.nav-link.active {
+    background: var(--green);
+    color: #fff;
+    font-weight: 600;
+}
+
+.navbar-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.welcome-text {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.btn-focus {
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.38rem 0.9rem;
+    border-radius: 999px;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.btn-focus:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.25);
+    color: #fff;
+}
+
+.btn-focus.active {
+    background: #000000;
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.30);
+    box-shadow: 0 0 0 2px rgba(255,255,255,0.12), 0 0 18px rgba(0,0,0,0.8);
+}
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   Emotion Button + Dropdown (Navbar)
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+
+.emotion-btn-wrap {
+    position: relative;
+}
+
+.btn-emotion {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    background: var(--bg-card-alt);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 0.35rem 0.75rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Inter', sans-serif;
+    white-space: nowrap;
+}
+
+.btn-emotion:hover {
+    border-color: var(--accent-indigo);
+    color: var(--text-primary);
+    background: rgba(129,140,248,0.10);
+}
+
+.btn-emotion[aria-expanded="true"] {
+    border-color: var(--accent-indigo);
+    color: var(--accent-indigo);
+    background: rgba(129,140,248,0.12);
+}
+
+.emotion-btn-icon { font-size: 0.9rem; }
+.emotion-btn-label { letter-spacing: 0.01em; }
+.emotion-btn-arrow {
+    font-size: 0.7rem;
+    transition: transform 0.2s;
+    color: var(--text-muted);
+}
+.btn-emotion[aria-expanded="true"] .emotion-btn-arrow { transform: rotate(180deg); }
+
+/* Active emotion indicator on button */
+.btn-emotion.has-manual {
+    border-color: var(--accent-indigo);
+    background: rgba(129,140,248,0.10);
+}
+
+/* Dropdown */
+.emotion-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    width: 240px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-card);
+    box-shadow: 0 20px 48px rgba(0,0,0,0.55), 0 4px 16px rgba(0,0,0,0.3);
+    z-index: 200;
+    overflow: hidden;
+    animation: dropdown-in 0.18s ease;
+}
+
+.emotion-dropdown[hidden] { display: none; }
+
+@keyframes dropdown-in {
+    from { opacity: 0; transform: translateY(-6px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0)   scale(1);    }
+}
+
+.emotion-dropdown-header {
+    padding: 0.8rem 1rem 0.6rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.dropdown-title {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.1rem;
+}
+
+.dropdown-subtitle {
+    display: block;
+    font-size: 0.68rem;
+    color: var(--text-muted);
+}
+
+.emotion-option-list {
+    padding: 0.4rem 0;
+}
+
+.emotion-option {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    width: 100%;
+    padding: 0.55rem 1rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.15s;
+    font-family: 'Inter', sans-serif;
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+}
+
+.emotion-option:hover {
+    background: var(--bg-card-alt);
+    color: var(--text-primary);
+}
+
+.emotion-option.active {
+    background: rgba(129,140,248,0.10);
+    color: var(--accent-indigo);
+}
+
+.option-icon { font-size: 1rem; flex-shrink: 0; }
+
+.option-text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.05rem;
+}
+
+.option-name { font-weight: 600; font-size: 0.8rem; }
+
+.option-desc { font-size: 0.65rem; color: var(--text-muted); }
+
+.option-check {
+    font-size: 0.7rem;
+    color: var(--accent-indigo);
+    opacity: 0;
+    transition: opacity 0.15s;
+    flex-shrink: 0;
+}
+
+.emotion-option.active .option-check { opacity: 1; }
+
+.emotion-dropdown-footer {
+    padding: 0.55rem 1rem;
+    border-top: 1px solid var(--border);
+}
+
+.btn-reset-emotion {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    padding: 0;
+    transition: color 0.15s;
+}
+
+.btn-reset-emotion:hover { color: var(--green); }
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   Page Layout
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+
+.dashboard-page {
+    padding-top: calc(var(--navbar-h) + 1.5rem);
+    padding-bottom: 2.5rem;
+    padding-left: 1.75rem;
+    padding-right: 1.75rem;
+    max-width: 1500px;
+    margin: 0 auto;
+}
+
+.dashboard-container {
+    display: grid;
+    grid-template-columns: 70fr 30fr;
+    gap: var(--gap);
+    align-items: start;
+}
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   LEFT â€” Video Section
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+
+.video-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap);
+}
+
+
+/* YouTube Video URL Bar */
+.video-url-bar {
+    margin-bottom: 0.85rem;
+}
+
+.video-url-input-wrap {
+    display: flex;
+    align-items: center;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.35rem 0.5rem 0.35rem 0.75rem;
+    gap: 0.6rem;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.video-url-input-wrap:focus-within {
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px var(--green-glow);
+}
+
+.url-icon {
+    font-size: 1rem;
+    opacity: 0.7;
+}
+
+.youtube-url-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text-primary);
+    font-size: 0.85rem;
+    font-family: 'Inter', sans-serif;
+}
+
+.youtube-url-input::placeholder {
+    color: var(--text-muted);
+}
+
+.btn-load-video {
+    background: var(--green);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 0.45rem 0.95rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    white-space: nowrap;
+}
+
+.btn-load-video:hover {
+    background: var(--green-dark);
+}
+
+/* ML Video Card */
+.ml-video-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-card);
+    overflow: hidden;
+}
+
+.ml-video-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #000;
+}
+
+.ml-video-wrapper iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+}
+
+/* â”€â”€ Compact Webcam Widget (overlay, top-right of video) â”€â”€ */
+.webcam-widget {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 172px;
+    background: rgba(10, 16, 30, 0.88);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 10px;
+    padding: 6px;
+    z-index: 10;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.55);
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    transition: opacity 0.25s;
+}
+
+.webcam-widget:hover { opacity: 1 !important; }
+
+/* Mini webcam frame */
+.webcam-mini-frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background: #000;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.10);
+}
+
+.camera-placeholder-mini {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    opacity: 0.35;
+}
+
+#webcam-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: inherit;
+}
+
+.live-badge {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    font-size: 0.55rem;
+    font-weight: 700;
+    background: rgba(220,38,38,0.85);
+    color: #fff;
+    padding: 2px 5px;
+    border-radius: 999px;
+    letter-spacing: 0.04em;
+    animation: pulse-badge 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-badge {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.6; }
+}
+
+/* Widget info row â€” emotion label */
+.widget-info-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 4px;
+}
+
+.widget-emotion-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    text-transform: capitalize;
+    letter-spacing: 0.03em;
+    text-align: center;
+}
+
+.widget-posture-raw {
+    font-size: 0.58rem;
+    color: var(--text-muted);
+    text-align: center;
+    min-height: 10px;
+}
+
+/* Widget control buttons */
+.widget-controls {
+    display: flex;
+    gap: 4px;
+}
+
+.btn-widget-start, .btn-widget-stop {
+    flex: 1;
+    padding: 4px 0;
+    border-radius: 5px;
+    font-size: 0.62rem;
+    font-weight: 700;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+    font-family: 'Inter', sans-serif;
+}
+
+.btn-widget-start {
+    background: var(--green);
+    color: #fff;
+    border-color: var(--green);
+}
+
+.btn-widget-start:hover { background: var(--green-dark); }
+
+.btn-widget-stop {
+    background: rgba(239,68,68,0.18);
+    color: #fca5a5;
+    border-color: rgba(239,68,68,0.35);
+}
+
+.btn-widget-stop:hover { background: rgba(239,68,68,0.28); }
+
+/* â”€â”€ Lesson card â”€â”€ */
+.lesson-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-card);
+    padding: 1.25rem 1.5rem;
+}
+
+.lesson-card-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1.5rem;
+}
+
+.lesson-text-block { flex: 1; }
+
+.lesson-heading {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.lesson-content {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.65;
+}
+
+.lesson-actions {
+    display: flex;
+    gap: 0.6rem;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.btn-lesson {
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    padding: 0.45rem 1rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.btn-lesson:hover {
+    border-color: var(--green);
+    color: var(--green);
+    background: var(--green-glow);
+}
+
+.btn-lesson.next-lesson {
+    background: var(--green);
+    border-color: var(--green);
+    color: #fff;
+}
+
+.btn-lesson.next-lesson:hover {
+    background: var(--green-dark);
+    border-color: var(--green-dark);
+}
+
+/* Posture alert banner */
+#posture-alert {
+    display: none;
+    padding: 0.65rem 1rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    font-weight: 500;
+    line-height: 1.5;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+#posture-alert.alert-focused  { background: rgba(34,197,94,0.12);  color: #4ade80; border-color: rgba(34,197,94,0.3); }
+#posture-alert.alert-tired    { background: rgba(245,158,11,0.12); color: #fbbf24; border-color: rgba(245,158,11,0.3); }
+#posture-alert.alert-confused { background: rgba(88,166,255,0.12); color: #93c5fd; border-color: rgba(88,166,255,0.3); }
+#posture-alert.alert-stressed { background: rgba(239,68,68,0.12);  color: #fca5a5; border-color: rgba(239,68,68,0.3); }
+#posture-alert.alert-calm     { background: rgba(139,148,158,0.12);color: var(--text-secondary); border-color: var(--border); }
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   RIGHT â€” Monitor Panel
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+
+.monitor-panel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap);
+    position: sticky;
+    top: calc(var(--navbar-h) + 1.5rem);
+}
+
+/* â”€â”€ Posture Monitor Card â”€â”€ */
+.monitor-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-card);
+    padding: 1rem 1.15rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+
+.monitor-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 0.7rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.monitor-title {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.mode-indicator {
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 0.2rem 0.55rem;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.mode-indicator.auto, .mode-indicator {
+    background: var(--green-glow);
+    color: var(--green);
+    border: 1px solid var(--border-accent);
+}
+
+.mode-indicator.manual {
+    background: rgba(245,158,11,0.15);
+    color: #fbbf24;
+    border: 1px solid rgba(245,158,11,0.3);
+}
+
+.confidence-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.4rem 0.65rem;
+    background: var(--bg-card-alt);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+}
+
+.confidence-label {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+}
+
+.confidence-value {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.recent-history {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    max-height: 36px;
+    overflow-y: auto;
+}
+
+.recent-history span { display: block; padding: 1px 0; }
+
+/* Processing buttons */
+.camera-controls {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-start-processing {
+    flex: 1;
+    background: var(--green);
+    color: #fff;
+    padding: 0.5rem;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 0.72rem;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.03em;
+    transition: background 0.2s;
+}
+
+.btn-start-processing:hover { background: var(--green-dark); }
+
+.btn-stop-processing {
+    flex: 1;
+    background: rgba(239,68,68,0.15);
+    color: #fca5a5;
+    border: 1px solid rgba(239,68,68,0.3);
+    padding: 0.5rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.72rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+    display: none;
+}
+
+.btn-stop-processing:hover { background: rgba(239,68,68,0.25); }
+
+/* Posture Tracking Card */
+.posture-tracking-card {
+    background: var(--bg-card-alt);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.75rem 0.85rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.posture-tracking-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.posture-tracking-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-secondary);
+}
+
+.posture-badge {
+    font-size: 0.62rem;
+    font-weight: 700;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    background: var(--green-glow);
+    color: var(--green);
+    border: 1px solid var(--border-accent);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    transition: all 0.2s ease;
+}
+
+.posture-badge.badge-upright { background: rgba(34,197,94,0.15); color: #4ade80; border-color: rgba(34,197,94,0.35); }
+.posture-badge.badge-leaning-left, .posture-badge.badge-leaning-right { background: rgba(245,158,11,0.15); color: #fbbf24; border-color: rgba(245,158,11,0.35); }
+.posture-badge.badge-leaning-forward, .posture-badge.badge-leaning-backward { background: rgba(129,140,248,0.15); color: #818cf8; border-color: rgba(129,140,248,0.35); }
+
+.posture-name-value {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+}
+
+.posture-icon {
+    font-size: 1.35rem;
+    line-height: 1;
+}
+
+.posture-text {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: 0.01em;
+}
+
+/* == Webcam Section inside Detection Monitor == */
+
+.webcam-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+}
+
+/* Webcam feed frame */
+.webcam-feed-frame {
+    position: relative;
+    width: 100%;
+    min-height: 160px;
+    height: 200px;
+    background: #000;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.12);
+    overflow: hidden;
+    box-shadow: inset 0 2px 10px rgba(0,0,0,0.6);
+}
+
+.camera-placeholder-main {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+}
+
+.cam-icon { font-size: 2rem; opacity: 0.4; }
+.cam-hint { font-size: 0.68rem; color: var(--text-muted); }
+
+#webcam-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scaleX(-1); /* mirror webcam */
+    border-radius: inherit;
+    display: block;
+}
+
+/* Detection labels under webcam */
+.detection-label-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 0.3rem 0;
+}
+
+.detection-state-label {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    text-transform: capitalize;
+    letter-spacing: 0.02em;
+}
+
+.detection-raw-label {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    min-height: 1em;
+}
+
+/* Thin divider between webcam area and stats */
+.monitor-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 0 -0.15rem;
+}
+
+
+/* â”€â”€ Manual Controls Card â”€â”€ */
+.manual-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-card);
+    padding: 1rem 1.15rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.manual-title {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.radio-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.4rem;
+}
+
+.mode-radio {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.55rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    transition: all 0.15s;
+    background: var(--bg-card-alt);
+}
+
+.mode-radio:hover { border-color: var(--green); color: var(--green); }
+
+.mode-radio input[type="radio"] { accent-color: var(--green); transform: scale(0.8); }
+
+.btn-start-auto {
+    width: 100%;
+    background: var(--green);
+    color: #fff;
+    padding: 0.5rem;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 0.72rem;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.03em;
+    transition: background 0.2s;
+}
+
+.btn-start-auto:hover { background: var(--green-dark); }
+
+/* â”€â”€ Camera status line â”€â”€ */
+.camera-status-line {
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+    padding: 0.3rem 0.5rem;
+    background: var(--bg-card-alt);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    line-height: 1.4;
+    word-break: break-word;
+}
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   Posture State Adaptation Themes (panel border only)
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+
+.video-section,
+.monitor-panel {
+    transition: filter 0.5s ease;
+}
+
+/* Applied to #emotion-panel â€” border accent per learning state */
+.state-focused  { border-color: rgba(88,166,255,0.4) !important; }
+.state-tired    { border-color: rgba(245,158,11,0.3) !important; }
+.state-confused { border-color: rgba(129,140,248,0.3) !important; }
+.state-stressed { border-color: rgba(239,68,68,0.3) !important; }
+.state-calm     { border-color: rgba(139,148,158,0.2) !important; }
+
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   Responsive
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+
+@media (max-width: 1100px) {
+    .dashboard-container {
+        grid-template-columns: 62fr 38fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-container {
+        grid-template-columns: 1fr;
+    }
+
+    .monitor-panel {
+        position: static;
+    }
+
+    .video-section-header {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .lesson-progress-wrap {
+        text-align: left;
+        min-width: unset;
+        width: 100%;
+    }
+
+    .lesson-card-inner {
+        flex-direction: column;
+    }
+
+    .lesson-actions {
+        flex-wrap: wrap;
+    }
+
+    .navbar-nav { gap: 0; }
+    .welcome-text { display: none; }
+
+    .webcam-widget {
+        width: 140px;
+        top: 8px;
+        right: 8px;
+    }
+
+    .emotion-dropdown {
+        right: auto;
+        left: 0;
+        width: 220px;
+    }
+}
+
+/* ══════════════════════════════════════════════════
+   4 Emotion State Panel Borders (correct names)
+   ══════════════════════════════════════════════════ */
+
+/* Replace stale 6-state aliases with 4-state system */
+.state-engaged    { border-color: rgba(34,197,94,0.40)  !important; }
+.state-bored      { border-color: rgba(96,165,250,0.35) !important; }
+.state-confused   { border-color: rgba(129,140,248,0.40) !important; }
+.state-frustrated { border-color: rgba(239,68,68,0.40)  !important; }
+
+/* ══════════════════════════════════════════════════
+   Mode indicator — warning state (no face / unclear)
+   ══════════════════════════════════════════════════ */
+
+.mode-indicator.warning {
+    background: rgba(245,158,11,0.15);
+    color: #fbbf24;
+    border: 1px solid rgba(245,158,11,0.35);
+}
+
+/* ══════════════════════════════════════════════════
+   Camera status line
+   ══════════════════════════════════════════════════ */
+
+.camera-status-line {
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    text-align: center;
+    padding: 0.25rem 0;
+    min-height: 1.2em;
+}
+
+@media (max-width: 480px) {
+    .dashboard-page {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .radio-grid { grid-template-columns: 1fr; }
+
+    .emotion-btn-label { display: none; }
+    .emotion-btn-arrow { display: none; }
+}
+
+/* ══════════════════════════════════════════════════
+   Adaptive Message & Posture Guidance Banner
+   ══════════════════════════════════════════════════ */
+
+.adaptation-banner {
+    margin-top: 1.25rem;
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius-card);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    transition: all 0.4s ease;
+}
+
+.adaptation-msg-block {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.adaptation-icon {
+    font-size: 1.75rem;
+    line-height: 1;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.adaptation-texts {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.adaptation-message {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.4;
+}
+
+.adaptation-tip {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+}
+
+/* Banner accent themes */
+.adaptation-banner.banner-engaged {
+    border-color: rgba(34, 197, 94, 0.45);
+    background: rgba(6, 78, 59, 0.35);
+}
+.adaptation-banner.banner-bored {
+    border-color: rgba(96, 165, 250, 0.45);
+    background: rgba(30, 58, 95, 0.35);
+}
+.adaptation-banner.banner-confused {
+    border-color: rgba(168, 85, 247, 0.45);
+    background: rgba(46, 16, 101, 0.35);
+}
+.adaptation-banner.banner-frustrated {
+    border-color: rgba(239, 68, 68, 0.45);
+    background: rgba(127, 29, 29, 0.35);
+}
+
+/* Applied to #emotion-panel — border accent per 4 learning states */
+.state-engaged    { border-color: rgba(34, 197, 94, 0.5) !important; box-shadow: 0 0 15px rgba(34, 197, 94, 0.15); }
+.state-bored      { border-color: rgba(96, 165, 250, 0.5) !important; box-shadow: 0 0 15px rgba(96, 165, 250, 0.15); }
+.state-confused   { border-color: rgba(168, 85, 247, 0.5) !important; box-shadow: 0 0 15px rgba(168, 85, 247, 0.15); }
+.state-frustrated { border-color: rgba(239, 68, 68, 0.5) !important; box-shadow: 0 0 15px rgba(239, 68, 68, 0.15); }
+
